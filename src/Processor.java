@@ -5,10 +5,16 @@ import java.util.Map;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
+import java.io.FileNotFoundException;
 
 
 public class Processor {
     Map<Status, Set<WorkOrder>> workOrders = new HashMap<>();
+    public Processor() {
+        for (Status status : Status.getAllStatus()) {
+            workOrders.put(status, new HashSet<WorkOrder>());
+        }
+    }
     public void processWorkOrders() {
         try {
             while (true) {
@@ -112,14 +118,17 @@ public class Processor {
         for (File f : files) {
             if (f.getName().endsWith(".json")) {
                 // f is a reference to a json file
+                String workOrderJSON = getFileContents(f.getName()).get(0);
                     System.out.println(f);
                 try {
-                    WorkOrder workorder = mapper.readValue(f, WorkOrder.class);
+
+                    WorkOrder workorder = mapper.readValue(workOrderJSON, WorkOrder.class);
                     System.out.println("workorder #:"+  workorder.getId());
                     Status workOrderStatus = workorder.getStatus();
-                    Set<WorkOrder> Set = workOrders.get(workOrderStatus);
-                    Set.add(workorder);
-                    workOrders.put(workOrderStatus, Set);
+                    System.out.println(workOrderStatus);
+                    Set<WorkOrder> set = workOrders.get(workorder.getStatus());
+                    set.add(workorder);
+                    workOrders.put(workOrderStatus, set);
 
 
                 } catch (IOException e) {
@@ -129,6 +138,21 @@ public class Processor {
             }
         }
         // read the json files into WorkOrders and put in map
+    }
+    public static List<String> getFileContents (String fileName) {
+        File file = new File (fileName);
+        try {
+            Scanner fileScanner = new Scanner(file);
+            List<String> fileContents = new ArrayList<>();
+            while (fileScanner.hasNext()) {
+                fileContents.add(fileScanner.nextLine());
+            }
+            return fileContents;
+        } catch (FileNotFoundException ex) {
+            System.out.println("Could not find file *" + fileName + "*");
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public static void main(String args[]) {

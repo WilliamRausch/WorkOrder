@@ -4,6 +4,8 @@ public enum Status {
     IN_PROGRESS(),
     DONE();
 
-    Status() {
+    public static Status[] getAllStatus() {
+        return new Status[] {Status.INITIAL, Status.ASSIGNED, Status.IN_PROGRESS, Status.DONE};
     }
+
 }
