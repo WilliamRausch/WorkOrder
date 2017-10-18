@@ -16,9 +16,10 @@ public class Processor {
         }
     }
     public void processWorkOrders() {
+        readIt();
         try {
             while (true) {
-                readIt();
+                //readIt();
                 moveIt();
                 Thread.sleep(5000l);
             }
@@ -33,8 +34,9 @@ public class Processor {
 
     private void moveIt() {
         Set<WorkOrder> inProgress = workOrders.get(Status.IN_PROGRESS);
-        if (inProgress.size() != 0){
+        if (inProgress.size() > 0){
             WorkOrder current = inProgress.iterator().next();
+            System.out.println("COMPLETED");
             inProgress.remove(current);
             current.setStatus(Status.DONE);
             workOrders.get(Status.DONE).add(current);
@@ -56,7 +58,8 @@ public class Processor {
         }
 
         Set<WorkOrder> assigned = workOrders.get(Status.ASSIGNED);
-        if (assigned.size() != 0){
+        if (assigned.size() > 0){
+            System.out.println("MOVED TO IN_PROGRESS");
             WorkOrder current = assigned.iterator().next();
             assigned.remove(current);
             current.setStatus(Status.IN_PROGRESS);
@@ -80,7 +83,8 @@ public class Processor {
         }
 
         Set<WorkOrder> initial = workOrders.get(Status.INITIAL);
-        if (initial.size() != 0){
+        if (initial.size() > 0){
+            System.out.println("MOVED TO ASSIGNED");
             WorkOrder current = initial.iterator().next();
             initial.remove(current);
             current.setStatus(Status.ASSIGNED);
