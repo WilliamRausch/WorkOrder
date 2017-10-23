@@ -16,10 +16,10 @@ public class Processor {
         }
     }
     public void processWorkOrders() {
-        readIt();
+
         try {
             while (true) {
-                //readIt();
+                readIt();
                 moveIt();
                 Thread.sleep(5000l);
             }
@@ -31,6 +31,22 @@ public class Processor {
 
 
     }
+    private void fileWriter(WorkOrder current){
+        try {
+            String fileName = current.getId() + ".json";
+            File newFile = new File(fileName);
+            FileWriter fileWriter = new FileWriter(newFile);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(current);
+
+            fileWriter.write(json);
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void moveIt() {
         Set<WorkOrder> inProgress = workOrders.get(Status.IN_PROGRESS);
@@ -40,20 +56,21 @@ public class Processor {
             inProgress.remove(current);
             current.setStatus(Status.DONE);
             workOrders.get(Status.DONE).add(current);
-            try {
-                String fileName = current.getId() + ".json";
-                File newFile = new File(fileName);
-                FileWriter fileWriter = new FileWriter(newFile);
-
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(current);
-
-                fileWriter.write(json);
-                fileWriter.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            fileWriter(current) ;
+//            try {
+//                String fileName = current.getId() + ".json";
+//                File newFile = new File(fileName);
+//                FileWriter fileWriter = new FileWriter(newFile);
+//
+//                ObjectMapper mapper = new ObjectMapper();
+//                String json = mapper.writeValueAsString(current);
+//
+//                fileWriter.write(json);
+//                fileWriter.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
 
@@ -64,21 +81,21 @@ public class Processor {
             assigned.remove(current);
             current.setStatus(Status.IN_PROGRESS);
             workOrders.get(Status.IN_PROGRESS).add(current);
-
-            try {
-                String fileName = current.getId() + ".json";
-                File newFile = new File(fileName);
-                FileWriter fileWriter = new FileWriter(newFile);
-
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(current);
-
-                fileWriter.write(json);
-                fileWriter.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                fileWriter(current) ;
+//            try {
+//                String fileName = current.getId() + ".json";
+//                File newFile = new File(fileName);
+//                FileWriter fileWriter = new FileWriter(newFile);
+//
+//                ObjectMapper mapper = new ObjectMapper();
+//                String json = mapper.writeValueAsString(current);
+//
+//                fileWriter.write(json);
+//                fileWriter.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
 
@@ -89,20 +106,21 @@ public class Processor {
             initial.remove(current);
             current.setStatus(Status.ASSIGNED);
             workOrders.get(Status.ASSIGNED).add(current);
-            try {
-                String fileName = current.getId() + ".json";
-                File newFile = new File(fileName);
-                FileWriter fileWriter = new FileWriter(newFile);
-
-                ObjectMapper mapper = new ObjectMapper();
-                String json = mapper.writeValueAsString(current);
-
-                fileWriter.write(json);
-                fileWriter.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            fileWriter(current) ;
+//            try {
+//                String fileName = current.getId() + ".json";
+//                File newFile = new File(fileName);
+//                FileWriter fileWriter = new FileWriter(newFile);
+//
+//                ObjectMapper mapper = new ObjectMapper();
+//                String json = mapper.writeValueAsString(current);
+//
+//                fileWriter.write(json);
+//                fileWriter.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
         }
 
